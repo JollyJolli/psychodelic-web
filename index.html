@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ULTIMATE MIND-MELTING TRIP</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Expletus+Sans:wght@700&display=swap');
+
+        :root {
+            --hue: 0;
+            --saturation: 100%;
+            --lightness: 50%;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Expletus Sans', cursive;
+            background: #000;
+            cursor: none;
+        }
+
+        #tripContainer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            perspective: 1000px;
+            transform-style: preserve-3d;
+            animation: containerSpin 60s linear infinite;
+        }
+
+        @keyframes containerSpin {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        .background {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at center, 
+                    hsl(calc(var(--hue) + 0), var(--saturation), var(--lightness)), 
+                    hsl(calc(var(--hue) + 120), var(--saturation), var(--lightness)), 
+                    hsl(calc(var(--hue) + 240), var(--saturation), var(--lightness)));
+            filter: blur(20px) contrast(200%);
+            opacity: 0.8;
+            mix-blend-mode: screen;
+            animation: bgPulse 10s ease-in-out infinite alternate;
+        }
+
+        @keyframes bgPulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.5); }
+        }
+
+        .fractal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('/api/placeholder/800/800') no-repeat center center;
+            background-size: cover;
+            mix-blend-mode: difference;
+            opacity: 0.2;
+            animation: fractalSpin 30s linear infinite;
+        }
+
+        @keyframes fractalSpin {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.5); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+
+        h1 {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 10vw;
+            text-align: center;
+            color: #fff;
+            text-shadow: 
+                0 0 10px #ff00ff,
+                0 0 20px #00ffff,
+                0 0 30px #ff00ff,
+                0 0 40px #00ffff;
+            animation: textWarp 5s infinite alternate;
+        }
+
+        @keyframes textWarp {
+            0% { 
+                transform: translate(-50%, -50%) perspective(500px) rotateX(0deg) rotateY(0deg) scale(1);
+                filter: hue-rotate(0deg);
+            }
+            100% { 
+                transform: translate(-50%, -50%) perspective(500px) rotateX(30deg) rotateY(30deg) scale(1.5);
+                filter: hue-rotate(360deg);
+            }
+        }
+
+        #tripButton {
+            position: absolute;
+            bottom: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 20px 40px;
+            font-size: 2rem;
+            background: linear-gradient(45deg, #ff00ff, #00ff00, #0000ff, #ff0000);
+            background-size: 400% 400%;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: none;
+            animation: buttonPulse 2s infinite alternate, gradientShift 5s ease infinite;
+        }
+
+        @keyframes buttonPulse {
+            0% { transform: translateX(-50%) scale(1); }
+            100% { transform: translateX(-50%) scale(1.2); }
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        #customCursor {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #fff;
+            pointer-events: none;
+            mix-blend-mode: difference;
+            z-index: 9999;
+            transition: transform 0.1s;
+        }
+
+        #cursorTrail {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9998;
+        }
+
+        .psychedelic-shape {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: conic-gradient(from 0deg, red, yellow, lime, aqua, blue, magenta, red);
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            animation: shapeFloat 20s infinite ease-in-out, shapeMorph 5s infinite ease-in-out;
+        }
+
+        @keyframes shapeFloat {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(50vw, 50vh) rotate(90deg); }
+            50% { transform: translate(100vw, 0) rotate(180deg); }
+            75% { transform: translate(50vw, -50vh) rotate(270deg); }
+        }
+
+        @keyframes shapeMorph {
+            0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+            50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+        }
+
+        #audioControl {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 2rem;
+            color: white;
+            background: none;
+            border: none;
+            cursor: none;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div id="tripContainer">
+        <div class="background"></div>
+        <div class="fractal"></div>
+        <h1>MIND-MELTING TRIP</h1>
+        <button id="tripButton">TAKE THE TRIP</button>
+    </div>
+
+    <button id="audioControl">🔊</button>
+
+    <div id="customCursor"></div>
+    <canvas id="cursorTrail"></canvas>
+
+    <audio id="tripAudio" loop>
+        <source src="/api/placeholder/audio" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const tripButton = document.getElementById('tripButton');
+        const tripContainer = document.getElementById('tripContainer');
+        const audioControl = document.getElementById('audioControl');
+        const tripAudio = document.getElementById('tripAudio');
+        const cursor = document.getElementById('customCursor');
+        const trailCanvas = document.getElementById('cursorTrail');
+        const ctx = trailCanvas.getContext('2d');
+
+        let isTripping = false;
+        let particles = [];
+
+        trailCanvas.width = window.innerWidth;
+        trailCanvas.height = window.innerHeight;
+
+        function toggleAudio() {
+            if (tripAudio.paused) {
+                tripAudio.play();
+                audioControl.textContent = '🔇';
+            } else {
+                tripAudio.pause();
+                audioControl.textContent = '🔊';
+            }
+        }
+
+        audioControl.addEventListener('click', toggleAudio);
+
+        tripButton.addEventListener('click', () => {
+            isTripping = !isTripping;
+            if (isTripping) {
+                tripButton.textContent = 'END THE TRIP';
+                tripContainer.style.animation = 'containerSpin 10s linear infinite';
+                document.body.style.animation = 'textWarp 2s infinite alternate';
+                toggleAudio();
+            } else {
+                tripButton.textContent = 'TAKE THE TRIP';
+                tripContainer.style.animation = '';
+                document.body.style.animation = '';
+                toggleAudio();
+            }
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            cursor.style.transform = `scale(${1 + Math.sin(Date.now() * 0.01) * 0.5})`;
+
+            particles.push({
+                x: e.clientX,
+                y: e.clientY,
+                size: Math.random() * 20 + 10,
+                color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+                speedX: Math.random() * 8 - 4,
+                speedY: Math.random() * 8 - 4
+            });
+
+            if (particles.length > 300) particles.shift();
+
+            document.documentElement.style.setProperty('--hue', e.clientX / window.innerWidth * 360);
+            document.documentElement.style.setProperty('--saturation', `${50 + (e.clientY / window.innerHeight * 50)}%`);
+        });
+
+        function animate() {
+            ctx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
+
+            particles.forEach((particle, index) => {
+                particle.x += particle.speedX;
+                particle.y += particle.speedY;
+                particle.size *= 0.95;
+
+                ctx.fillStyle = particle.color;
+                ctx.beginPath();
+                ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                ctx.fill();
+
+                if (particle.size < 0.1) {
+                    particles.splice(index, 1);
+                }
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        window.addEventListener('resize', () => {
+            trailCanvas.width = window.innerWidth;
+            trailCanvas.height = window.innerHeight;
+        });
+
+        // Add psychedelic floating shapes
+        for (let i = 0; i < 10; i++) {
+            const shape = document.createElement('div');
+            shape.classList.add('psychedelic-shape');
+            shape.style.left = Math.random() * window.innerWidth + 'px';
+            shape.style.top = Math.random() * window.innerHeight + 'px';
+            shape.style.animationDelay = Math.random() * 10 + 's';
+            tripContainer.appendChild(shape);
+        }
+
+        // Extreme color cycling
+        setInterval(() => {
+            document.documentElement.style.setProperty('--hue', Math.random() * 360);
+            document.documentElement.style.setProperty('--saturation', `${50 + Math.random() * 50}%`);
+            document.documentElement.style.setProperty('--lightness', `${25 + Math.random() * 50}%`);
+        }, 1000);
+
+        // Add more trippy effects when tripping
+        function intensifyTrip() {
+            if (isTripping) {
+                tripContainer.style.transform = `rotateX(${Math.sin(Date.now() * 0.001) * 20}deg) rotateY(${Math.cos(Date.now() * 0.001) * 20}deg)`;
+                document.body.style.filter = `hue-rotate(${Date.now() * 0.1}deg) saturate(${150 + Math.sin(Date.now() * 0.001) * 50}%)`;
+            }
+            requestAnimationFrame(intensifyTrip);
+        }
+
+        intensifyTrip();
+    </script>
+</body>
+</html>
