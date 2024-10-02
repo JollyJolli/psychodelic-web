@@ -36,7 +36,7 @@ To run the project locally, you will need:
 - **Click the audio icon** 🔊 to play/pause the background music.
 
 ### Demo
-You can also experience the **Ultimate Mind-Melting Trip** online by visiting [your-demo-link-here].
+The online demo of the **Ultimate Mind-Melting Trip** is coming soon! Stay tuned for updates.
 
 ## 🛠️ Built With
 - **HTML**: Structure of the web page.
