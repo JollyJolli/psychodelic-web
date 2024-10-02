@@ -150,35 +150,6 @@
             transition: transform 0.1s;
         }
 
-        #cursorTrail {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 9998;
-        }
-
-        .psychedelic-shape {
-            position: absolute;
-            width: 150px;
-            height: 150px;
-            background: conic-gradient(from 0deg, red, yellow, lime, aqua, blue, magenta, red);
-            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-            animation: shapeFloat 20s infinite ease-in-out, shapeMorph 5s infinite ease-in-out;
-        }
-
-        @keyframes shapeFloat {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            25% { transform: translate(50vw, 50vh) rotate(90deg); }
-            50% { transform: translate(100vw, 0) rotate(180deg); }
-            75% { transform: translate(50vw, -50vh) rotate(270deg); }
-        }
-
-        @keyframes shapeMorph {
-            0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
-            50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
-        }
-
         #audioControl {
             position: fixed;
             top: 20px;
@@ -199,38 +170,40 @@
         <h1>MIND-MELTING TRIP</h1>
         <button id="tripButton">TAKE THE TRIP</button>
     </div>
-
-    <button id="audioControl">🔊</button>
+    <p>Click to play</p>
+    <button id="audioControl">Click 🔇</button>
 
     <div id="customCursor"></div>
-    <canvas id="cursorTrail"></canvas>
 
-    <audio id="tripAudio" loop>
-        <source src="/api/placeholder/audio" type="audio/mpeg">
+    <audio id="tripAudio" loop autoplay>
+        <source src="../music.mp3" type="audio/mpeg">
     </audio>
 
     <script>
         const tripButton = document.getElementById('tripButton');
-        const tripContainer = document.getElementById('tripContainer');
-        const audioControl = document.getElementById('audioControl');
         const tripAudio = document.getElementById('tripAudio');
+        const audioControl = document.getElementById('audioControl');
         const cursor = document.getElementById('customCursor');
-        const trailCanvas = document.getElementById('cursorTrail');
-        const ctx = trailCanvas.getContext('2d');
+        let isTripping = true;
+        window.addEventListener('load', function() {
+            var audio = document.getElementById('tripAudio');
+            audio.play().catch(function(error) {
+                console.log("Autoplay was prevented, user interaction is needed.");
+            });
+        });
 
-        let isTripping = false;
-        let particles = [];
-
-        trailCanvas.width = window.innerWidth;
-        trailCanvas.height = window.innerHeight;
-
+        // Attempt to play the audio when the page loads
+        
         function toggleAudio() {
             if (tripAudio.paused) {
-                tripAudio.play();
-                audioControl.textContent = '🔇';
+                tripAudio.play().then(() => {
+                    audioControl.textContent = '🔊';
+                }).catch(error => {
+                    console.log("Error playing audio:", error);
+                });
             } else {
                 tripAudio.pause();
-                audioControl.textContent = '🔊';
+                audioControl.textContent = '🔇';
             }
         }
 
@@ -240,13 +213,9 @@
             isTripping = !isTripping;
             if (isTripping) {
                 tripButton.textContent = 'END THE TRIP';
-                tripContainer.style.animation = 'containerSpin 10s linear infinite';
-                document.body.style.animation = 'textWarp 2s infinite alternate';
                 toggleAudio();
             } else {
                 tripButton.textContent = 'TAKE THE TRIP';
-                tripContainer.style.animation = '';
-                document.body.style.animation = '';
                 toggleAudio();
             }
         });
@@ -256,76 +225,14 @@
             cursor.style.top = e.clientY + 'px';
             cursor.style.transform = `scale(${1 + Math.sin(Date.now() * 0.01) * 0.5})`;
 
-            particles.push({
-                x: e.clientX,
-                y: e.clientY,
-                size: Math.random() * 20 + 10,
-                color: `hsl(${Math.random() * 360}, 100%, 50%)`,
-                speedX: Math.random() * 8 - 4,
-                speedY: Math.random() * 8 - 4
-            });
-
-            if (particles.length > 300) particles.shift();
-
             document.documentElement.style.setProperty('--hue', e.clientX / window.innerWidth * 360);
             document.documentElement.style.setProperty('--saturation', `${50 + (e.clientY / window.innerHeight * 50)}%`);
         });
 
-        function animate() {
-            ctx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
-
-            particles.forEach((particle, index) => {
-                particle.x += particle.speedX;
-                particle.y += particle.speedY;
-                particle.size *= 0.95;
-
-                ctx.fillStyle = particle.color;
-                ctx.beginPath();
-                ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-                ctx.fill();
-
-                if (particle.size < 0.1) {
-                    particles.splice(index, 1);
-                }
-            });
-
-            requestAnimationFrame(animate);
-        }
-
-        animate();
-
         window.addEventListener('resize', () => {
-            trailCanvas.width = window.innerWidth;
-            trailCanvas.height = window.innerHeight;
+            cursor.style.width = window.innerWidth + 'px';
+            cursor.style.height = window.innerHeight + 'px';
         });
-
-        // Add psychedelic floating shapes
-        for (let i = 0; i < 10; i++) {
-            const shape = document.createElement('div');
-            shape.classList.add('psychedelic-shape');
-            shape.style.left = Math.random() * window.innerWidth + 'px';
-            shape.style.top = Math.random() * window.innerHeight + 'px';
-            shape.style.animationDelay = Math.random() * 10 + 's';
-            tripContainer.appendChild(shape);
-        }
-
-        // Extreme color cycling
-        setInterval(() => {
-            document.documentElement.style.setProperty('--hue', Math.random() * 360);
-            document.documentElement.style.setProperty('--saturation', `${50 + Math.random() * 50}%`);
-            document.documentElement.style.setProperty('--lightness', `${25 + Math.random() * 50}%`);
-        }, 1000);
-
-        // Add more trippy effects when tripping
-        function intensifyTrip() {
-            if (isTripping) {
-                tripContainer.style.transform = `rotateX(${Math.sin(Date.now() * 0.001) * 20}deg) rotateY(${Math.cos(Date.now() * 0.001) * 20}deg)`;
-                document.body.style.filter = `hue-rotate(${Date.now() * 0.1}deg) saturate(${150 + Math.sin(Date.now() * 0.001) * 50}%)`;
-            }
-            requestAnimationFrame(intensifyTrip);
-        }
-
-        intensifyTrip();
     </script>
 </body>
 </html>
